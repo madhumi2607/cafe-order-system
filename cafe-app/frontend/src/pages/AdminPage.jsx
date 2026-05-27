@@ -47,7 +47,6 @@ export default function AdminPage() {
   }
 
   const addItem = async () => {
-    if (!newItem.name || !newItem.price) return
     setLoading(true)
     await fetch(`${API}fetch("https://cafe-order-system-stl6.onrender.com/api/menu")/menu`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...newItem, price: parseFloat(newItem.price) }) })
     setNewItem({ name: '', price: '', category: 'Beverages' }); setAdding(false); setLoading(false); fetchMenu()
