@@ -58,21 +58,21 @@ def init_db():
 init_db()
 
 # --- MENU ROUTES ---
-@app.route('/api/menu', methods=['GET'])
+@app.route('/menu', methods=['GET'])
 def get_menu():
     conn = get_db()
     items = conn.execute('SELECT * FROM menu_items ORDER BY category, name').fetchall()
     conn.close()
     return jsonify([dict(i) for i in items])
 
-@app.route('/api/menu/active', methods=['GET'])
+@app.route('/menu/active', methods=['GET'])
 def get_active_menu():
     conn = get_db()
     items = conn.execute('SELECT * FROM menu_items WHERE active=1 ORDER BY category, name').fetchall()
     conn.close()
     return jsonify([dict(i) for i in items])
 
-@app.route('/api/menu', methods=['POST'])
+@app.route('/menu', methods=['POST'])
 def add_menu_item():
     data = request.json
     if not data.get('name') or not data.get('price') or not data.get('category'):
@@ -85,7 +85,7 @@ def add_menu_item():
     conn.close()
     return jsonify({'id': item_id, 'message': 'Item added'}), 201
 
-@app.route('/api/menu/<item_id>', methods=['PATCH'])
+@app.route('/menu/<item_id>', methods=['PATCH'])
 def toggle_item(item_id):
     data = request.json
     conn = get_db()
@@ -94,7 +94,7 @@ def toggle_item(item_id):
     conn.close()
     return jsonify({'message': 'Updated'})
 
-@app.route('/api/menu/<item_id>', methods=['DELETE'])
+@app.route('/menu/<item_id>', methods=['DELETE'])
 def delete_item(item_id):
     conn = get_db()
     conn.execute('DELETE FROM menu_items WHERE id=?', (item_id,))
@@ -103,7 +103,7 @@ def delete_item(item_id):
     return jsonify({'message': 'Deleted'})
 
 # --- ORDER ROUTES ---
-@app.route('/api/orders', methods=['POST'])
+@app.route('/orders', methods=['POST'])
 def place_order():
     data = request.json
     required = ['customer_name', 'department', 'pickup_slot', 'items', 'total']
@@ -146,7 +146,7 @@ def place_order():
     conn.close()
     return jsonify({'order_id': order_id, 'message': 'Order placed!'}), 201
 
-@app.route('/api/orders', methods=['GET'])
+@app.route('/orders', methods=['GET'])
 def get_orders():
     import json
     conn = get_db()
@@ -159,7 +159,7 @@ def get_orders():
         result.append(d)
     return jsonify(result)
 
-@app.route('/api/orders/<order_id>', methods=['PATCH'])
+@app.route('/orders/<order_id>', methods=['PATCH'])
 def update_order_status(order_id):
     data = request.json
     conn = get_db()
@@ -171,8 +171,6 @@ def update_order_status(order_id):
 @app.route('/uploads/<filename>')
 def serve_upload(filename):
     return send_from_directory(UPLOADS_DIR, filename)
-
-import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
