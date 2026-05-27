@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import styles from './OrderPage.module.css'
 
 const PICKUP_SLOTS = ['8:30 AM','9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM']
-const API = ''
+const API = 'https://cafe-order-system-stl6.onrender.com'
 
 export default function OrderPage() {
   const [menu, setMenu] = useState([])
@@ -19,7 +19,7 @@ export default function OrderPage() {
   const fileRef = useRef()
 
   useEffect(() => {
-    fetch(`${API}fetch("https://cafe-order-system-stl6.onrender.com/api/menu")/menu/active`)
+    fetch(`${API}/menu/active`)
       .then(r => r.json())
       .then(setMenu)
       .catch(() => setError('Could not load menu. Is the server running?'))
@@ -60,18 +60,43 @@ export default function OrderPage() {
 
   const handleSubmit = async () => {
     if (!canSubmit) return
-    setSubmitting(true); setError('')
+
+    setSubmitting(true)
+    setError('')
+
     try {
-      const res = await fetch(`${API}fetch("https://cafe-order-system-stl6.onrender.com/api/menu")/orders`, {
+      const res = await fetch(`${API}/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customer_name: name, department: dept, pickup_slot: slot, items: cartItems.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })), total, screenshot })
+        body: JSON.stringify({
+          customer_name: name,
+          department: dept,
+          pickup_slot: slot,
+          items: cartItems.map(i => ({
+            id: i.id,
+            name: i.name,
+            price: i.price,
+            qty: i.qty
+          })),
+          total,
+          screenshot
+        })
       })
+
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Order failed')
-      setOrderId(data.order_id); setStep(4)
-    } catch (e) { setError(e.message) }
-    finally { setSubmitting(false) }
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Order failed')
+      }
+
+      setOrderId(data.order_id)
+      setStep(4)
+
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (step === 4) return (
