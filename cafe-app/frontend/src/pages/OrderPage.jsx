@@ -19,7 +19,7 @@ export default function OrderPage() {
   const fileRef = useRef()
 
   useEffect(() => {
-    fetch(`${API}/api/menu/active`)
+    fetch(`${API}fetch("https://cafe-order-system-stl6.onrender.com/api/menu")/menu/active`)
       .then(r => r.json())
       .then(setMenu)
       .catch(() => setError('Could not load menu. Is the server running?'))
@@ -62,7 +62,7 @@ export default function OrderPage() {
     if (!canSubmit) return
     setSubmitting(true); setError('')
     try {
-      const res = await fetch(`${API}/api/orders`, {
+      const res = await fetch(`${API}fetch("https://cafe-order-system-stl6.onrender.com/api/menu")/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customer_name: name, department: dept, pickup_slot: slot, items: cartItems.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })), total, screenshot })

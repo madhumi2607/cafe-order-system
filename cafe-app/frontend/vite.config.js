@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'https://cafe-order-system-stl6.onrender.com',
+      'fetch("https://cafe-order-system-stl6.onrender.com/api/menu")': 'https://cafe-order-system-stl6.onrender.com',
       '/uploads': 'https://cafe-order-system-stl6.onrender.com'
     }
   }

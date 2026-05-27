@@ -15,11 +15,11 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false)
 
   const fetchOrders = async () => {
-    const res = await fetch(`${API}/api/orders`)
+    const res = await fetch(`${API}fetch("https://cafe-order-system-stl6.onrender.com/api/menu")/orders`)
     setOrders(await res.json())
   }
   const fetchMenu = async () => {
-    const res = await fetch(`${API}/api/menu`)
+    const res = await fetch(`${API}fetch("https://cafe-order-system-stl6.onrender.com/api/menu")/menu`)
     setMenu(await res.json())
   }
 
@@ -30,26 +30,26 @@ export default function AdminPage() {
   }, [])
 
   const updateStatus = async (id, status) => {
-    await fetch(`${API}/api/orders/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) })
+    await fetch(`${API}fetch("https://cafe-order-system-stl6.onrender.com/api/menu")/orders/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) })
     fetchOrders()
     setSelectedOrder(prev => prev?.id === id ? {...prev, status} : prev)
   }
 
   const toggleItem = async (id, active) => {
-    await fetch(`${API}/api/menu/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ active: active ? 0 : 1 }) })
+    await fetch(`${API}fetch("https://cafe-order-system-stl6.onrender.com/api/menu")/menu/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ active: active ? 0 : 1 }) })
     fetchMenu()
   }
 
   const deleteItem = async (id) => {
     if (!confirm('Delete this item?')) return
-    await fetch(`${API}/api/menu/${id}`, { method: 'DELETE' })
+    await fetch(`${API}fetch("https://cafe-order-system-stl6.onrender.com/api/menu")/menu/${id}`, { method: 'DELETE' })
     fetchMenu()
   }
 
   const addItem = async () => {
     if (!newItem.name || !newItem.price) return
     setLoading(true)
-    await fetch(`${API}/api/menu`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...newItem, price: parseFloat(newItem.price) }) })
+    await fetch(`${API}fetch("https://cafe-order-system-stl6.onrender.com/api/menu")/menu`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...newItem, price: parseFloat(newItem.price) }) })
     setNewItem({ name: '', price: '', category: 'Beverages' }); setAdding(false); setLoading(false); fetchMenu()
   }
 
